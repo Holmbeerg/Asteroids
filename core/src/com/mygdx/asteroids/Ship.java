@@ -1,79 +1,30 @@
 package com.mygdx.asteroids;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-public class Ship {
-    private float xPos;
-    private float yPos;
-    final float MAX_SPEED;
-    private float speedX;
-    private float speedY;
-    private boolean dead;
+// Inheritance = extending and inheriting from abstract base class Entities.
+// polymorphism = many different forms. For example can override applySpeed and so it takes a different form than base class.
+public class Ship extends Entities {
+    final float DECELERATE_CONSTANT = 0.992F;
 
-    public Ship(int x, int y) {
-        this.xPos = x;
-        this.yPos = y;
-        this.dead = false;
-        this.MAX_SPEED = 200;
-        this.speedX = 0;
-        this.speedY = 0; // default är 0 (tror jag), men lite tydligare kanske om skriver ut
+    public Ship(int xPos, int yPos) {
+        super(xPos, yPos);
     }
-
-    public float getSpeedX() {
-        return speedX;
-    }
-
-    // Accelerera
-    public void applySpeed() {
-        this.setX(this.getX() + this.getSpeedX());
-        this.setY(this.getY() + this.getSpeedY());
-    }
+    // Accelerate
 
     // big retard (retardation)
     public void slowDown() {
-        this.setSpeedX((float) (this.getSpeedX() * 0.992));
-        this.setSpeedY((float) (this.getSpeedY() * 0.992));
+        this.setSpeedX((float) (this.getSpeedX() * DECELERATE_CONSTANT));
+        this.setSpeedY((float) (this.getSpeedY() * DECELERATE_CONSTANT));
     }
 
-    public void setSpeedX(float speedX) {
-        this.speedX = speedX;
+    @Override
+    public void applySpeed() {
+        this.setX(this.getX() + this.getSpeedX()); // new position = old position + velocity
+        this.setY(this.getY() + this.getSpeedY()); //Gdx.graphics.getDeltaTime(), use to get same results regardless of fps?
     }
-
-    public float getSpeedY() {
-        return speedY;
-    }
-
-    public void setSpeedY(float speedY) {
-        this.speedY = speedY;
-    }
-
-    public boolean isDead() {
-        return dead;
-    }
-
-    public void setDead(boolean dead) {
-        this.dead = dead;
-    }
-
-    public void update() {
-
-    }
-
-
-    public float getX() {
-        return xPos;
-    }
-
-    public void setX(float x) {
-        this.xPos = x;
-    }
-
-    public void setY(float y) {
-        this.yPos = y;
-    }
-
-    public float getY() {
-        return yPos;
-    }
-
 }
+
+
