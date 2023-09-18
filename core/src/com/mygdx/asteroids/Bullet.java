@@ -1,5 +1,5 @@
 package com.mygdx.asteroids;
 
-public class Asteroids {
+public class Bullet {
 
 }
