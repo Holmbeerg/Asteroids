@@ -4,7 +4,7 @@ package com.mygdx.asteroids;
 # TODO: Fix bullet positioning on sprite
 # TODO: Collision detection
 # TODO: Wrap around screen with ship
-# TODO: Add sounds, https://classicgaming.cc/classics/asteroids/sounds
+# TODO: Add sounds, https://classicgaming.cc/classics/asteroids/sounds, SoundManager class?
 # TODO: Adjust off-screen detection for asteroids so that they never get immediately deleted upon touching edge
 A Sprite is always rectangular and its position (x, y) are located in the bottom left corner of that rectangle.
 A Sprite also has an origin around which rotations and scaling are performed (that is, the origin is not modified by rotation and scaling).
@@ -43,15 +43,13 @@ public class Application extends Game {
     Sound thrusterSound;
 
     float currentShipRotation;
-    private long thrusterSoundId = -1;
-    private float mainSoundTimer = 0;
+
+    SoundManager soundManager;
+    AsteroidsManager asteroidsManager;
 
     private Array<Bullet> bullets;
     private float shootCooldown = 0;
     private static final float SHOOT_DELAY = 0.2f;
-
-    private int maxAsteroids = 3;
-    private Array<Asteroid> asteroids;
 
     @Override
     public void create() {
@@ -68,9 +66,8 @@ public class Application extends Game {
         bulletSprite = new Sprite(bulletImg);
         asteroidSprite = new Sprite(asteroidImg);
 
-        mainSound = Gdx.audio.newSound(Gdx.files.internal("beat1.ogg"));
-        shootingSound = Gdx.audio.newSound(Gdx.files.internal("fire.mp3"));
-        thrusterSound = Gdx.audio.newSound(Gdx.files.internal("thrust.ogg"));
+        soundManager = new SoundManager();
+        asteroidsManager = new AsteroidsManager(batch, asteroidSprite);
 
         ship = new Ship(400, 400);
         this.currentShipRotation = 90; // Start game with ship facing up
@@ -78,7 +75,6 @@ public class Application extends Game {
         movingShipSprite.rotate(90);
 
         bullets = new Array<>();
-        asteroids = new Array<>();
     }
 
     @Override
@@ -87,8 +83,8 @@ public class Application extends Game {
         ScreenUtils.clear(0, 0, 0, 0);
         shipMovement();
         bulletMovement();
-        asteroidHandler();
-        audioHandler();
+        asteroidsManager.update();
+        soundManager.update();
         shipSprite.setPosition(ship.getX(), ship.getY());
         batch.begin();
         shipSprite.draw(batch);
@@ -127,36 +123,6 @@ public class Application extends Game {
         ship.applySpeed(Gdx.graphics.getDeltaTime());
     }
 
-    private void audioHandler() {
-        playMainAudio();
-        handleThrusterAudio();
-    }
-
-    private void handleThrusterAudio() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            if (thrusterSoundId != -1) {
-                thrusterSound.stop(thrusterSoundId);
-            }
-            thrusterSoundId = thrusterSound.play(0.5f);
-            thrusterSound.setLooping(thrusterSoundId, true);
-        }
-
-        if (!Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (thrusterSoundId != -1) {
-                thrusterSound.stop(thrusterSoundId);
-                thrusterSoundId = -1;
-            }
-        }
-    }
-
-    private void playMainAudio() {
-        mainSoundTimer += Gdx.graphics.getDeltaTime();
-        if (mainSoundTimer >= 1) {
-            mainSound.play(0.5f);
-            mainSoundTimer = 0;
-        }
-    }
-
     private void bulletMovement() {
         shootCooldown += Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && shootCooldown >= SHOOT_DELAY) {
@@ -169,7 +135,7 @@ public class Application extends Game {
             bullet.applySpeed(Gdx.graphics.getDeltaTime());
             bullet.update(Gdx.graphics.getDeltaTime());
 
-            if (bullet.isDead() || isOffScreen(bullet)) {
+            if (bullet.isDead() || bullet.isOffScreen()) {
                 bullets.removeIndex(i);
                 continue;
             }
@@ -179,79 +145,13 @@ public class Application extends Game {
         }
     }
 
-    private void asteroidSpawner() {
-        if (asteroids.size >= maxAsteroids) {
-            return;
-        }
-
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-
-        int border = MathUtils.random(1, 4); // 1 = Top, 2 = Bottom, 3 = Left, 4 = Right
-
-        float x = 0;
-        float y = 0;
-        float asteroidRotation = 0;
-
-        switch (border) {
-            case 1: // Top border
-                x = MathUtils.random(0, screenWidth); // Random x position along the top
-                y = screenHeight;                     // Top edge (y = max height)
-                asteroidRotation = MathUtils.random(90, 270); // Moves downward
-                break;
-
-            case 2: // Bottom border
-                x = MathUtils.random(0, screenWidth); // Random x position along the bottom
-                y = 0;                                // Bottom edge (y = 0)
-                asteroidRotation = MathUtils.random(-90, 90); // Moves upward
-                break;
-
-            case 3: // Left border
-                x = 0;                                // Left edge (x = 0)
-                y = MathUtils.random(0, screenHeight); // Random y position along the left
-                asteroidRotation = MathUtils.random(-45, 45); // Moves rightward
-                break;
-
-            case 4: // Right border
-                x = screenWidth;                      // Right edge (x = max width)
-                y = MathUtils.random(0, screenHeight); // Random y position along the right
-                asteroidRotation = MathUtils.random(135, 225); // Moves leftward
-                break;
-        }
-        Asteroid newAsteroid = new Asteroid(x, y, asteroidRotation);
-        asteroids.add(newAsteroid);
-    }
-
-    private void asteroidHandler() {
-        if (asteroids.size < maxAsteroids) {
-            asteroidSpawner();
-        }
-
-        for (int i = asteroids.size - 1; i >= 0; i--) {
-            Asteroid asteroid = asteroids.get(i);
-            asteroid.applySpeed(Gdx.graphics.getDeltaTime());
-
-            if (asteroid.isDead() || isOffScreen(asteroid)) {
-                asteroids.removeIndex(i);
-                continue;
-            }
-            batch.begin();
-            batch.draw(asteroidSprite, asteroid.getX(), asteroid.getY());
-            batch.end();
-        }
-    }
-
     private void shootBullet() {
         float bulletX = ship.getX() + shipSprite.getWidth() / 2;
         float bulletY = ship.getY() + shipSprite.getHeight() / 2;
         Bullet newBullet = new Bullet(bulletX, bulletY, currentShipRotation, ship.getSpeedX(), ship.getSpeedY());
         bullets.add(newBullet);
-        shootingSound.play(0.5f);
-    }
-
-    private boolean isOffScreen(Entities entity) {
-        return entity.getX() < 0 || entity.getX() > Gdx.graphics.getWidth() ||
-                entity.getY() < 0 || entity.getY() > Gdx.graphics.getHeight();
+       // shootingSound.play(0.5f);
+        soundManager.playShootingSound();
     }
 
     @Override
@@ -261,9 +161,5 @@ public class Application extends Game {
         thrusterSound.dispose();
         mainSound.dispose();
         shootingSound.dispose();
-    }
-
-    private void levelUp() {
-        this.maxAsteroids += 2;
     }
 }

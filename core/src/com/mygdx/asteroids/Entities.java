@@ -1,5 +1,7 @@
 package com.mygdx.asteroids;
 
+import com.badlogic.gdx.Gdx;
+
 abstract public class Entities {
     private float xPos;
     private float yPos;
@@ -39,6 +41,10 @@ abstract public class Entities {
         this.dead = dead;
     }
 
+    public boolean isOffScreen() {
+        return this.getX() < 0 || this.getX() > Gdx.graphics.getWidth() ||
+                this.getY() < 0 || this.getY() > Gdx.graphics.getHeight();
+    }
 
     public float getX() {
         return xPos;
