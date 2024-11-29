@@ -1,6 +1,7 @@
 package com.mygdx.asteroids;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 abstract public class Entities {
     private float xPos;
@@ -8,13 +9,15 @@ abstract public class Entities {
     private float speedX;
     private float speedY;
     private boolean dead;
+    private Sprite sprite;
 
-    public Entities(float x, float y) {
+    public Entities(float x, float y, Sprite sprite) {
         this.xPos = x;
         this.yPos = y;
         this.dead = false;
         this.speedX = 0;
         this.speedY = 0;
+        this.sprite = sprite;
     }
 
     public float getSpeedX() {
@@ -42,8 +45,12 @@ abstract public class Entities {
     }
 
     public boolean isOffScreen() {
-        return this.getX() < 0 || this.getX() > Gdx.graphics.getWidth() ||
-                this.getY() < 0 || this.getY() > Gdx.graphics.getHeight();
+        return (getX() + sprite.getWidth() < 0 || getX() > Gdx.graphics.getWidth() ||
+                getY() + sprite.getHeight() < 0 || getY() > Gdx.graphics.getHeight());
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 
     public float getX() {

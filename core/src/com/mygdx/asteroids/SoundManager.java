@@ -6,9 +6,9 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
 
-    private Sound thrusterSound;
-    private Sound mainSound;
-    private Sound shootingSound;
+    private final Sound thrusterSound;
+    private final Sound mainSound;
+    private final Sound shootingSound;
     private long thrusterSoundId = -1;
     private float mainSoundTimer = 0f;
 

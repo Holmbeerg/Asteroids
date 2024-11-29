@@ -38,10 +38,6 @@ public class Application extends Game {
     Sprite bulletSprite;
     Sprite asteroidSprite;
 
-    Sound mainSound;
-    Sound shootingSound;
-    Sound thrusterSound;
-
     float currentShipRotation;
 
     SoundManager soundManager;
@@ -139,6 +135,7 @@ public class Application extends Game {
                 bullets.removeIndex(i);
                 continue;
             }
+
             batch.begin();
             batch.draw(bulletSprite, bullet.getX(), bullet.getY());
             batch.end();
@@ -148,9 +145,8 @@ public class Application extends Game {
     private void shootBullet() {
         float bulletX = ship.getX() + shipSprite.getWidth() / 2;
         float bulletY = ship.getY() + shipSprite.getHeight() / 2;
-        Bullet newBullet = new Bullet(bulletX, bulletY, currentShipRotation, ship.getSpeedX(), ship.getSpeedY());
+        Bullet newBullet = new Bullet(bulletX, bulletY, currentShipRotation, ship.getSpeedX(), ship.getSpeedY(), bulletSprite);
         bullets.add(newBullet);
-       // shootingSound.play(0.5f);
         soundManager.playShootingSound();
     }
 
@@ -158,8 +154,5 @@ public class Application extends Game {
     public void dispose() {
         batch.dispose();
         img.dispose();
-        thrusterSound.dispose();
-        mainSound.dispose();
-        shootingSound.dispose();
     }
 }

@@ -1,5 +1,6 @@
 package com.mygdx.asteroids;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Bullet extends Entities {
@@ -7,8 +8,8 @@ public class Bullet extends Entities {
     private static final float BULLET_LIFETIME = 1.5f; // Seconds before bullet disappears
     private float lifeTime;
 
-    public Bullet(float x, float y, float rotation, float shipSpeedX, float shipSpeedY) {
-        super(x, y);
+    public Bullet(float x, float y, float rotation, float shipSpeedX, float shipSpeedY, Sprite sprite) {
+        super(x, y, sprite);
         this.lifeTime = 0;
 
         float speedFactor = 0.01f;
