@@ -1,10 +1,14 @@
 package com.mygdx.asteroids;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 public class Ship extends Entities {
     final float DECELERATE_CONSTANT = 0.992F;
+    final Sprite movingShipSprite;
 
-    public Ship(int xPos, int yPos) {
-        super(xPos, yPos);
+    public Ship(int xPos, int yPos, Sprite shipSprite, Sprite movingShipSprite) {
+        super(xPos, yPos, shipSprite);
+        this.movingShipSprite = movingShipSprite;
     }
 
     public void slowDown(float deltaTime) {
@@ -16,6 +20,10 @@ public class Ship extends Entities {
     public void applySpeed(float deltaTime) {
         setX(getX() + getSpeedX() * deltaTime);
         setY(getY() + getSpeedY() * deltaTime);
+    }
+
+    public Sprite getMovingShipSprite() {
+        return this.movingShipSprite;
     }
 }
 

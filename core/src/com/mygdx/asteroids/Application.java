@@ -38,14 +38,10 @@ public class Application extends Game {
     Sprite bulletSprite;
     Sprite asteroidSprite;
 
-    float currentShipRotation;
-
     SoundManager soundManager;
     AsteroidsManager asteroidsManager;
-
-    private Array<Bullet> bullets;
-    private float shootCooldown = 0;
-    private static final float SHOOT_DELAY = 0.2f;
+    ShipManager shipManager;
+    BulletManager bulletManager;
 
     @Override
     public void create() {
@@ -65,89 +61,19 @@ public class Application extends Game {
         soundManager = new SoundManager();
         asteroidsManager = new AsteroidsManager(batch, asteroidSprite);
 
-        ship = new Ship(400, 400);
-        this.currentShipRotation = 90; // Start game with ship facing up
-        shipSprite.rotate(90);
-        movingShipSprite.rotate(90);
-
-        bullets = new Array<>();
+        ship = new Ship(400, 400, shipSprite, movingShipSprite);
+        shipManager = new ShipManager(batch, ship);
+        bulletManager = new BulletManager(batch, soundManager, shipManager, bulletSprite);
     }
 
     @Override
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         ScreenUtils.clear(0, 0, 0, 0);
-        shipMovement();
-        bulletMovement();
+        bulletManager.update();
+        shipManager.update();
         asteroidsManager.update();
         soundManager.update();
-        shipSprite.setPosition(ship.getX(), ship.getY());
-        batch.begin();
-        shipSprite.draw(batch);
-        batch.end();
-    }
-
-    private void shipMovement() {
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        float rotationAmount = (300 * deltaTime);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            batch.begin();
-            shipSprite.rotate(rotationAmount);
-            movingShipSprite.rotate(rotationAmount);
-            currentShipRotation += rotationAmount;
-            batch.end();
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            batch.begin();
-            shipSprite.rotate(-rotationAmount);
-            movingShipSprite.rotate(-rotationAmount);
-            currentShipRotation -= rotationAmount;
-            batch.end();
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            float baseAcceleration = 300f;
-            float accelerationX = baseAcceleration * MathUtils.cosDeg(currentShipRotation);
-            float accelerationY = baseAcceleration * MathUtils.sinDeg(currentShipRotation);
-
-            ship.setSpeedX(ship.getSpeedX() + accelerationX * deltaTime);
-            ship.setSpeedY(ship.getSpeedY() + accelerationY * deltaTime);
-        }
-        ship.slowDown(Gdx.graphics.getDeltaTime());
-        ship.applySpeed(Gdx.graphics.getDeltaTime());
-    }
-
-    private void bulletMovement() {
-        shootCooldown += Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && shootCooldown >= SHOOT_DELAY) {
-            shootBullet();
-            shootCooldown = 0;
-        }
-
-        for (int i = bullets.size - 1; i >= 0; i--) {
-            Bullet bullet = bullets.get(i);
-            bullet.applySpeed(Gdx.graphics.getDeltaTime());
-            bullet.update(Gdx.graphics.getDeltaTime());
-
-            if (bullet.isDead() || bullet.isOffScreen()) {
-                bullets.removeIndex(i);
-                continue;
-            }
-
-            batch.begin();
-            batch.draw(bulletSprite, bullet.getX(), bullet.getY());
-            batch.end();
-        }
-    }
-
-    private void shootBullet() {
-        float bulletX = ship.getX() + shipSprite.getWidth() / 2;
-        float bulletY = ship.getY() + shipSprite.getHeight() / 2;
-        Bullet newBullet = new Bullet(bulletX, bulletY, currentShipRotation, ship.getSpeedX(), ship.getSpeedY(), bulletSprite);
-        bullets.add(newBullet);
-        soundManager.playShootingSound();
     }
 
     @Override
