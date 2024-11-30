@@ -5,7 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Circle;
 
 public class BulletManager {
     private Array<Bullet> bullets;
@@ -26,6 +28,11 @@ public class BulletManager {
 
     public void update() {
         bulletMovement();
+    }
+
+    public void removeBullet(Bullet bullet) {
+        System.out.println("removing bullet " + bullet);
+        bullets.removeValue(bullet, true);
     }
 
     private void bulletMovement() {
@@ -49,6 +56,10 @@ public class BulletManager {
             batch.draw(bulletSprite, bullet.getX(), bullet.getY());
             batch.end();
         }
+    }
+
+    public Array<Bullet> getBullets() {
+        return bullets;
     }
 
     private void shootBullet() {

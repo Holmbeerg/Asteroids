@@ -15,14 +15,20 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.util.Arrays;
 
 public class Application extends Game {
     SpriteBatch batch;
@@ -43,6 +49,7 @@ public class Application extends Game {
     ShipManager shipManager;
     BulletManager bulletManager;
 
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -59,11 +66,10 @@ public class Application extends Game {
         asteroidSprite = new Sprite(asteroidImg);
 
         soundManager = new SoundManager();
-        asteroidsManager = new AsteroidsManager(batch, asteroidSprite);
-
         ship = new Ship(400, 400, shipSprite, movingShipSprite);
         shipManager = new ShipManager(batch, ship);
         bulletManager = new BulletManager(batch, soundManager, shipManager, bulletSprite);
+        asteroidsManager = new AsteroidsManager(batch, asteroidSprite, bulletManager);
     }
 
     @Override

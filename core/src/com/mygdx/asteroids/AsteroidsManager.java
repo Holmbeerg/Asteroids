@@ -3,7 +3,10 @@ package com.mygdx.asteroids;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 public class AsteroidsManager {
@@ -12,16 +15,22 @@ public class AsteroidsManager {
     private Array<Asteroid> asteroids;
     private final Sprite asteroidSprite;
     private SpriteBatch batch;
+    private BulletManager bulletManager;
 
-    public AsteroidsManager(SpriteBatch batch, Sprite asteroidSprite) {
+    public AsteroidsManager(SpriteBatch batch, Sprite asteroidSprite, BulletManager bulletManager) {
         this.asteroidSprite = asteroidSprite;
         this.batch = batch;
         this.asteroids = new Array<>();
+        this.bulletManager = bulletManager;
     }
 
     public void update() {
         asteroidSpawner();
         asteroidHandler();
+
+        for (Asteroid asteroid : asteroids) {
+            checkCollisionWithBullets(asteroid);
+        }
     }
 
     private void asteroidSpawner() {
@@ -69,6 +78,23 @@ public class AsteroidsManager {
         asteroids.add(newAsteroid);
     }
 
+    private void destroyAsteroid(Asteroid asteroid) {
+        asteroids.removeValue(asteroid, true);
+    }
+
+    private void checkCollisionWithBullets(Asteroid asteroid) { // Rectangles for now, can try switching to polygons later
+        Rectangle asteroidRect = asteroid.getBoundingRectangle();
+
+        for (Bullet bullet : bulletManager.getBullets()) {
+            Rectangle bulletRect = bullet.getBoundingRectangle();
+
+            if (asteroidRect.contains(bulletRect)) {
+                destroyAsteroid(asteroid);
+                bulletManager.removeBullet(bullet);
+            }
+        }
+    }
+
     private void asteroidHandler() {
         if (asteroids.size < maxAsteroids) {
             asteroidSpawner();
@@ -86,6 +112,5 @@ public class AsteroidsManager {
             batch.draw(asteroidSprite, asteroid.getX(), asteroid.getY());
             batch.end();
         }
-
     }
 }
