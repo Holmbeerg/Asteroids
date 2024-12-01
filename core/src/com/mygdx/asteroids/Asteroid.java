@@ -15,7 +15,7 @@ public class Asteroid extends Entities {
 
     public Asteroid(float x, float y, float rotation, Sprite asteroidSprite, float buffer) {
         super(x, y, asteroidSprite);
-        this.boundingRectangle = new Rectangle(x , y, asteroidSprite.getWidth(), asteroidSprite.getHeight());
+        this.boundingRectangle = new Rectangle(x, y, asteroidSprite.getWidth() + 20, asteroidSprite.getHeight() + 20);
         float speedX = ASTEROID_SPEED * MathUtils.cosDeg(rotation);
         float speedY = ASTEROID_SPEED * MathUtils.sinDeg(rotation);
         setSpeedX(speedX);

@@ -22,6 +22,7 @@ public class ShipManager {
     public void update() {
         shipMovement();
         drawShip();
+        ship.updateBoundingRectangle();
     }
 
     public Ship getShip() {

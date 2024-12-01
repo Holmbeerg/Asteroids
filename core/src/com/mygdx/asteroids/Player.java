@@ -21,7 +21,11 @@ public class Player {
         return lives;
     }
 
-    public void setLives(int lives) {
-        this.lives = lives;
+    public void removeLife () {
+        this.lives -= 1;
+
+        if (lives <= 0) {
+            // game over
+        }
     }
 }

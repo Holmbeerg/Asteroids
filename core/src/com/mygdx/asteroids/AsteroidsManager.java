@@ -16,12 +16,16 @@ public class AsteroidsManager {
     private final Sprite asteroidSprite;
     private SpriteBatch batch;
     private BulletManager bulletManager;
+    private ShipManager shipManager;
+    private Player player;
 
-    public AsteroidsManager(SpriteBatch batch, Sprite asteroidSprite, BulletManager bulletManager) {
+    public AsteroidsManager(SpriteBatch batch, Sprite asteroidSprite, BulletManager bulletManager, ShipManager shipManager, Player Player) {
         this.asteroidSprite = asteroidSprite;
         this.batch = batch;
         this.asteroids = new Array<>();
         this.bulletManager = bulletManager;
+        this.shipManager = shipManager;
+        this.player = Player;
     }
 
     public void update() {
@@ -30,6 +34,7 @@ public class AsteroidsManager {
 
         for (Asteroid asteroid : asteroids) {
             checkCollisionWithBullets(asteroid);
+            checkCollisionWithPlayer(asteroid);
         }
     }
 
@@ -91,7 +96,17 @@ public class AsteroidsManager {
             if (asteroidRect.contains(bulletRect)) {
                 destroyAsteroid(asteroid);
                 bulletManager.removeBullet(bullet);
+                System.out.println(player.getLives());
             }
+        }
+    }
+
+    private void checkCollisionWithPlayer(Asteroid asteroid) {
+        Rectangle asteroidRect = asteroid.getBoundingRectangle();
+
+        if (asteroidRect.contains(shipManager.getShip().getBoundingRectangle())) {
+            destroyAsteroid(asteroid);
+            player.removeLife();
         }
     }
 

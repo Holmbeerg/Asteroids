@@ -69,8 +69,8 @@ public class Application extends Game {
         ship = new Ship(400, 400, shipSprite, movingShipSprite);
         shipManager = new ShipManager(batch, ship);
         bulletManager = new BulletManager(batch, soundManager, shipManager, bulletSprite);
-        asteroidsManager = new AsteroidsManager(batch, asteroidSprite, bulletManager);
         Player player = new Player();
+        asteroidsManager = new AsteroidsManager(batch, asteroidSprite, bulletManager, shipManager, player);
     }
 
     @Override
