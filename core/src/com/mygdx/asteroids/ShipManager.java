@@ -2,15 +2,14 @@ package com.mygdx.asteroids;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
 public class ShipManager {
-    Sprite movingShipSprite;
-    Ship ship;
-    Batch batch;
+    private Ship ship;
+    private SpriteBatch batch;
+    private boolean isThrusting;
+
 
     public ShipManager(SpriteBatch batch, Ship ship) {
         this.ship = ship;
@@ -24,6 +23,7 @@ public class ShipManager {
         drawShip();
         ship.updateBoundingRectangle();
         handleScreenWrap();
+        ship.getMovingShipSprite().setRotation(ship.getSprite().getRotation());
     }
 
     private void handleScreenWrap() {
@@ -65,24 +65,35 @@ public class ShipManager {
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             batch.begin();
-            ship.getSprite().rotate(rotationAmount);
+            ship.updateSpriteRotation(rotationAmount);
             batch.end();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             batch.begin();
-            ship.getSprite().rotate(-rotationAmount);
+            ship.updateSpriteRotation(-rotationAmount);
             batch.end();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if (!isThrusting) {
+                ship.setSpriteToThrusting();
+                isThrusting = true;
+            }
+
             float baseAcceleration = 300f;
             float accelerationX = baseAcceleration * MathUtils.cosDeg(ship.getSprite().getRotation());
             float accelerationY = baseAcceleration * MathUtils.sinDeg(ship.getSprite().getRotation());
 
             ship.setSpeedX(ship.getSpeedX() + accelerationX * deltaTime);
             ship.setSpeedY(ship.getSpeedY() + accelerationY * deltaTime);
+        } else {
+            if (isThrusting) {
+                ship.setSpriteToNormal();
+                isThrusting = false;
+            }
         }
+
         ship.slowDown(Gdx.graphics.getDeltaTime());
         ship.applySpeed(Gdx.graphics.getDeltaTime());
     }

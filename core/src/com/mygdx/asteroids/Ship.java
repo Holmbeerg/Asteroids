@@ -6,24 +6,41 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Ship extends Entities {
     final float DECELERATE_CONSTANT = 0.992F;
-    private final Sprite movingShipSprite;
+    private final Sprite normalSprite;
+    private final Sprite thrustingSprite;
     private final Rectangle boundingRectangle;
 
-    public Ship(int xPos, int yPos, Sprite shipSprite, Sprite movingShipSprite) {
+    public Ship(int xPos, int yPos, Sprite shipSprite, Sprite thrustingSprite) {
         super(xPos, yPos, shipSprite);
-        this.movingShipSprite = movingShipSprite;
+        this.thrustingSprite = thrustingSprite;
         this.boundingRectangle = new Rectangle(xPos, yPos, shipSprite.getWidth(), shipSprite.getHeight());
+        this.normalSprite = shipSprite;
+
     }
 
     public void slowDown(float deltaTime) {
         float decelFactor = (float) Math.pow(DECELERATE_CONSTANT, deltaTime * 60); // http://www.mathwords.com/e/exponential_decay.htm
         setSpeedX(getSpeedX() * decelFactor);
         setSpeedY(getSpeedY() * decelFactor);
+
     }
 
     public void applySpeed(float deltaTime) {
         setX(getX() + getSpeedX() * deltaTime);
         setY(getY() + getSpeedY() * deltaTime);
+    }
+
+    public void setSpriteToThrusting() {
+        super.setSprite(thrustingSprite);
+    }
+
+    public void setSpriteToNormal() {
+        super.setSprite(normalSprite);
+    }
+
+    public void updateSpriteRotation(float rotation) {
+        this.normalSprite.rotate(rotation);
+        this.thrustingSprite.rotate(rotation);
     }
 
     public Rectangle getBoundingRectangle() {
@@ -35,7 +52,7 @@ public class Ship extends Entities {
     }
 
     public Sprite getMovingShipSprite() {
-        return this.movingShipSprite;
+        return this.thrustingSprite;
     }
 }
 

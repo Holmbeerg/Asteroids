@@ -53,6 +53,10 @@ abstract public class Entities {
         return sprite;
     }
 
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+    }
+
     public float getX() {
         return xPos;
     }
