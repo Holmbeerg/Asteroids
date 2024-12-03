@@ -23,6 +23,29 @@ public class ShipManager {
         shipMovement();
         drawShip();
         ship.updateBoundingRectangle();
+        handleScreenWrap();
+    }
+
+    private void handleScreenWrap() {
+        float buffer = 50f;
+        float screenHeight = Gdx.graphics.getHeight();
+        float screenWidth = Gdx.graphics.getWidth();
+
+        if (ship.getY() > screenHeight + buffer) {
+            ship.setY(0 - ship.getSprite().getHeight() - buffer);
+        }
+
+        if (ship.getY() + ship.getSprite().getHeight() < -buffer) {
+            ship.setY(screenHeight + buffer);
+        }
+
+        if (ship.getX() > screenWidth + buffer) {
+            ship.setX(0 - ship.getSprite().getWidth() - buffer);
+        }
+
+        if (ship.getX() + ship.getSprite().getWidth() < -buffer) {
+            ship.setX(screenWidth + buffer);
+        }
     }
 
     public Ship getShip() {
