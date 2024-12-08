@@ -100,6 +100,7 @@ public class AsteroidsManager {
             if (asteroidRect.contains(bulletRect)) {
                 destroyAsteroid(asteroid);
                 bulletManager.removeBullet(bullet);
+                player.addScore(20); // #TODO different sizes of asteroids exist, give different score depending on size of asteroid
             }
         }
     }

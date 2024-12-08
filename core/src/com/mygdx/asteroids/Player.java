@@ -21,6 +21,10 @@ public class Player {
         return lives <= 0;
     }
 
+    public int getLives() {
+        return lives;
+    }
+
     public void removeLife() {
         this.lives -= 1;
     }

@@ -17,16 +17,14 @@ public class SoundManager {
     Player player;
 
     public SoundManager(Player player) {
-        this.mainSound = Gdx.audio.newSound(Gdx.files.internal("beat1.ogg"));
-        this.shootingSound = Gdx.audio.newSound(Gdx.files.internal("fire.mp3"));
-        this.thrusterSound = Gdx.audio.newSound(Gdx.files.internal("thrust.ogg"));
+        this.mainSound = Gdx.audio.newSound(Gdx.files.internal("audio/beat1.ogg"));
+        this.shootingSound = Gdx.audio.newSound(Gdx.files.internal("audio/fire.mp3"));
+        this.thrusterSound = Gdx.audio.newSound(Gdx.files.internal("audio/thrust.ogg"));
         this.player = player;
     }
 
     public void playShootingSound() {
-        if (!player.isDead()) {
-            shootingSound.play(0.5f);
-        }
+        shootingSound.play(0.5f);
     }
 
     public void update() {
