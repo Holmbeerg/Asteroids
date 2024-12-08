@@ -2,10 +2,6 @@ package com.mygdx.asteroids;
 
 /*
 # TODO: Fix bullet positioning on sprite
-# TODO: Collision detection
-# TODO: Wrap around screen with ship
-# TODO: Add sounds, https://classicgaming.cc/classics/asteroids/sounds, SoundManager class?
-# TODO: Adjust off-screen detection for asteroids so that they never get immediately deleted upon touching edge
 A Sprite is always rectangular and its position (x, y) are located in the bottom left corner of that rectangle.
 A Sprite also has an origin around which rotations and scaling are performed (that is, the origin is not modified by rotation and scaling).
 The origin is given relative to the bottom left corner of the Sprite, its position.
@@ -13,26 +9,16 @@ The origin is given relative to the bottom left corner of the Sprite, its positi
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.util.Arrays;
-
 public class Application extends Game {
-    SpriteBatch batch;
-    Texture img;
+    private SpriteBatch batch;
+    private Texture img;
     TextureRegion shipImg;
     TextureRegion movingShip;
     TextureRegion bulletImg;
@@ -44,10 +30,11 @@ public class Application extends Game {
     Sprite bulletSprite;
     Sprite asteroidSprite;
 
-    SoundManager soundManager;
-    AsteroidsManager asteroidsManager;
-    ShipManager shipManager;
-    BulletManager bulletManager;
+    private SoundManager soundManager;
+    private AsteroidsManager asteroidsManager;
+    private ShipManager shipManager;
+    private BulletManager bulletManager;
+    private Player player;
 
 
     @Override
@@ -64,12 +51,11 @@ public class Application extends Game {
         movingShipSprite = new Sprite(movingShip);
         bulletSprite = new Sprite(bulletImg);
         asteroidSprite = new Sprite(asteroidImg);
-
-        soundManager = new SoundManager();
         ship = new Ship(400, 400, shipSprite, movingShipSprite);
+        player = new Player();
+        soundManager = new SoundManager(player);
         shipManager = new ShipManager(batch, ship);
         bulletManager = new BulletManager(batch, soundManager, shipManager, bulletSprite);
-        Player player = new Player();
         asteroidsManager = new AsteroidsManager(batch, asteroidSprite, bulletManager, shipManager, player);
     }
 
@@ -77,11 +63,15 @@ public class Application extends Game {
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         ScreenUtils.clear(0, 0, 0, 0);
-        bulletManager.update();
-        shipManager.update();
+
+        if (!player.isDead()) {
+            bulletManager.update();
+            shipManager.update();
+        }
         asteroidsManager.update();
         soundManager.update();
     }
+
 
     @Override
     public void dispose() {

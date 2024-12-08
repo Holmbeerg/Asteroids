@@ -14,20 +14,32 @@ public class SoundManager {
 
     private static final float MAIN_SOUND_INTERVAL = 1.0f;
 
-    public SoundManager() {
+    Player player;
+
+    public SoundManager(Player player) {
         this.mainSound = Gdx.audio.newSound(Gdx.files.internal("beat1.ogg"));
         this.shootingSound = Gdx.audio.newSound(Gdx.files.internal("fire.mp3"));
         this.thrusterSound = Gdx.audio.newSound(Gdx.files.internal("thrust.ogg"));
+        this.player = player;
     }
 
     public void playShootingSound() {
-        shootingSound.play(0.5f);
+        if (!player.isDead()) {
+            shootingSound.play(0.5f);
+        }
     }
 
     public void update() {
         playMainAudio();
-        handleThrusterAudio();
+
+        if (!player.isDead()) {
+            handleThrusterAudio();
+        } else {
+            thrusterSound.stop(thrusterSoundId);
+            thrusterSoundId = -1;
+        }
     }
+
 
     private void handleThrusterAudio() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -45,6 +57,7 @@ public class SoundManager {
             }
         }
     }
+
 
     private void playMainAudio() {
         mainSoundTimer += Gdx.graphics.getDeltaTime();

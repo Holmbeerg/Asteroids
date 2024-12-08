@@ -17,15 +17,12 @@ public class Player {
         return score;
     }
 
-    public int getLives() {
-        return lives;
+    public boolean isDead() {
+        return lives <= 0;
     }
 
-    public void removeLife () {
+    public void removeLife() {
         this.lives -= 1;
-
-        if (lives <= 0) {
-            // game over
-        }
     }
 }
+

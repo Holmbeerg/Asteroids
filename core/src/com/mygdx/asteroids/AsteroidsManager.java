@@ -3,8 +3,6 @@ package com.mygdx.asteroids;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -32,6 +30,12 @@ public class AsteroidsManager {
         asteroidSpawner();
         asteroidHandler();
 
+        if (!player.isDead()) {
+            collisionHandler();
+        }
+    }
+
+    private void collisionHandler() {
         for (Asteroid asteroid : asteroids) {
             checkCollisionWithBullets(asteroid);
             checkCollisionWithPlayer(asteroid);
@@ -96,7 +100,6 @@ public class AsteroidsManager {
             if (asteroidRect.contains(bulletRect)) {
                 destroyAsteroid(asteroid);
                 bulletManager.removeBullet(bullet);
-                System.out.println(player.getLives());
             }
         }
     }
