@@ -38,7 +38,6 @@ public class SoundManager {
         }
     }
 
-
     private void handleThrusterAudio() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             if (thrusterSoundId != -1) {
@@ -55,7 +54,6 @@ public class SoundManager {
             }
         }
     }
-
 
     private void playMainAudio() {
         mainSoundTimer += Gdx.graphics.getDeltaTime();

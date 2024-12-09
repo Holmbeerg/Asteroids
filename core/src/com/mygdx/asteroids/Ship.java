@@ -1,6 +1,5 @@
 package com.mygdx.asteroids;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -13,7 +12,7 @@ public class Ship extends Entities {
     public Ship(int xPos, int yPos, Sprite shipSprite, Sprite thrustingSprite) {
         super(xPos, yPos, shipSprite);
         this.thrustingSprite = thrustingSprite;
-        this.boundingRectangle = new Rectangle(xPos, yPos, shipSprite.getWidth(), shipSprite.getHeight());
+        this.boundingRectangle = new Rectangle(xPos, yPos, shipSprite.getWidth() - 10, shipSprite.getHeight() - 10);
         this.normalSprite = shipSprite;
 
     }
@@ -22,7 +21,6 @@ public class Ship extends Entities {
         float decelFactor = (float) Math.pow(DECELERATE_CONSTANT, deltaTime * 60); // http://www.mathwords.com/e/exponential_decay.htm
         setSpeedX(getSpeedX() * decelFactor);
         setSpeedY(getSpeedY() * decelFactor);
-
     }
 
     public void applySpeed(float deltaTime) {
