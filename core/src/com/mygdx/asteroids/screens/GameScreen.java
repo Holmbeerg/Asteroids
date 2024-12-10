@@ -1,4 +1,4 @@
-package com.mygdx.asteroids;
+package com.mygdx.asteroids.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.asteroids.Application;
+import com.mygdx.asteroids.managers.*;
+import com.mygdx.asteroids.models.Player;
+import com.mygdx.asteroids.models.Ship;
 
 public class GameScreen implements Screen {
     private Application game;
@@ -26,6 +30,7 @@ public class GameScreen implements Screen {
     private AsteroidsManager asteroidsManager;
     private ShipManager shipManager;
     private BulletManager bulletManager;
+    private CollisionManager collisionManager;
     private Player player;
 
     public GameScreen(final Application game) {
@@ -45,7 +50,8 @@ public class GameScreen implements Screen {
         soundManager = new SoundManager(player);
         shipManager = new ShipManager(game.batch, ship);
         bulletManager = new BulletManager(game.batch, soundManager, shipManager, bulletSprite);
-        asteroidsManager = new AsteroidsManager(game.batch, asteroidSprite, bulletManager, shipManager, player);
+        asteroidsManager = new AsteroidsManager(game.batch, asteroidSprite);
+        collisionManager = new CollisionManager(asteroidsManager, bulletManager, player, shipManager);
     }
 
 
@@ -72,6 +78,7 @@ public class GameScreen implements Screen {
         }
         asteroidsManager.update();
         soundManager.update();
+        collisionManager.update();
     }
 
     private void draw() {

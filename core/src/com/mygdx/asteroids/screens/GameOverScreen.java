@@ -1,4 +1,4 @@
-package com.mygdx.asteroids;
+package com.mygdx.asteroids.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.asteroids.Application;
+import com.mygdx.asteroids.models.Player;
 
 public class GameOverScreen implements Screen {
     Application game;
@@ -31,7 +33,7 @@ public class GameOverScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
 
-        Label gameOverLabel = new Label("GAME OVER! FINAL SCORE:" + player.getScore(), skin, "white"); // om inget anges tas default från skin som i metal-ui.json är svart = syns inte på svart bakgrund
+        Label gameOverLabel = new Label("GAME OVER! FINAL SCORE: " + player.getScore(), skin, "white"); // om inget anges tas default från skin som i metal-ui.json är svart = syns inte på svart bakgrund
         gameOverLabel.setColor(Color.RED);
 
         table.add(gameOverLabel);

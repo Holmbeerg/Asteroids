@@ -1,4 +1,4 @@
-package com.mygdx.asteroids;
+package com.mygdx.asteroids.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.asteroids.models.Bullet;
 
 public class BulletManager {
     private Array<Bullet> bullets;
     private float shootCooldown = 0;
-    private static final float SHOOT_DELAY = 0.2f;
+    private static final float SHOOT_DELAY = 0.1f;
     private Batch batch;
     private ShipManager shipManager;
     private SoundManager soundManager;
@@ -29,13 +30,12 @@ public class BulletManager {
     }
 
     public void removeBullet(Bullet bullet) {
-        System.out.println("removing bullet " + bullet);
         bullets.removeValue(bullet, true);
     }
 
     private void bulletMovement() {
         shootCooldown += Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && shootCooldown >= SHOOT_DELAY) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && shootCooldown >= SHOOT_DELAY && bullets.size < 4) {
             shootBullet();
             shootCooldown = 0;
         }

@@ -1,11 +1,11 @@
-package com.mygdx.asteroids;
+package com.mygdx.asteroids.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.asteroids.models.Asteroid;
 
 public class AsteroidsManager {
 
@@ -13,33 +13,20 @@ public class AsteroidsManager {
     private Array<Asteroid> asteroids;
     private final Sprite asteroidSprite;
     private SpriteBatch batch;
-    private BulletManager bulletManager;
-    private ShipManager shipManager;
-    private Player player;
 
-    public AsteroidsManager(SpriteBatch batch, Sprite asteroidSprite, BulletManager bulletManager, ShipManager shipManager, Player Player) {
+    public AsteroidsManager(SpriteBatch batch, Sprite asteroidSprite) {
         this.asteroidSprite = asteroidSprite;
         this.batch = batch;
         this.asteroids = new Array<>();
-        this.bulletManager = bulletManager;
-        this.shipManager = shipManager;
-        this.player = Player;
     }
 
     public void update() {
         asteroidSpawner();
         asteroidHandler();
-
-        if (!player.isDead()) {
-            collisionHandler();
-        }
     }
 
-    private void collisionHandler() {
-        for (Asteroid asteroid : asteroids) {
-            checkCollisionWithBullets(asteroid);
-            checkCollisionWithPlayer(asteroid);
-        }
+    public Array<Asteroid> getAsteroids() {
+        return asteroids;
     }
 
     private void asteroidSpawner() {
@@ -87,31 +74,8 @@ public class AsteroidsManager {
         asteroids.add(newAsteroid);
     }
 
-    private void destroyAsteroid(Asteroid asteroid) {
+    public void destroyAsteroid(Asteroid asteroid) {
         asteroids.removeValue(asteroid, true);
-    }
-
-    private void checkCollisionWithBullets(Asteroid asteroid) { // Rectangles for now, can try switching to polygons later
-        Rectangle asteroidRect = asteroid.getBoundingRectangle();
-
-        for (Bullet bullet : bulletManager.getBullets()) {
-            Rectangle bulletRect = bullet.getBoundingRectangle();
-
-            if (asteroidRect.contains(bulletRect)) {
-                destroyAsteroid(asteroid);
-                bulletManager.removeBullet(bullet);
-                player.addScore(20); // #TODO different sizes of asteroids exist, give different score depending on size of asteroid
-            }
-        }
-    }
-
-    private void checkCollisionWithPlayer(Asteroid asteroid) {
-        Rectangle asteroidRect = asteroid.getBoundingRectangle();
-
-        if (asteroidRect.contains(shipManager.getShip().getBoundingRectangle())) {
-            destroyAsteroid(asteroid);
-            player.removeLife();
-        }
     }
 
     private void asteroidHandler() {

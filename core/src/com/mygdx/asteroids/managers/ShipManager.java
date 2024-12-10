@@ -1,9 +1,10 @@
-package com.mygdx.asteroids;
+package com.mygdx.asteroids.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.mygdx.asteroids.models.Ship;
 
 public class ShipManager {
     private Ship ship;
@@ -61,7 +62,7 @@ public class ShipManager {
 
     private void shipMovement() {
         float deltaTime = Gdx.graphics.getDeltaTime();
-        float rotationAmount = (300 * deltaTime);
+        float rotationAmount = (320 * deltaTime);
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             batch.begin();

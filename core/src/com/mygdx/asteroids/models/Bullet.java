@@ -1,4 +1,4 @@
-package com.mygdx.asteroids;
+package com.mygdx.asteroids.models;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Bullet extends Entities {
 
-    private static final float DEFAULT_BULLET_SPEED = 4f;
+    private static final float DEFAULT_BULLET_SPEED = 6f;
     private float lifeTime;
     private static final float BULLET_LIFETIME = 1.5f;
     private Rectangle boundingRectangle;

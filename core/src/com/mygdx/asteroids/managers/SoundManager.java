@@ -1,8 +1,9 @@
-package com.mygdx.asteroids;
+package com.mygdx.asteroids.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.mygdx.asteroids.models.Player;
 
 public class SoundManager {
 
