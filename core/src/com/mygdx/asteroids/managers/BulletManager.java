@@ -62,7 +62,7 @@ public class BulletManager {
 
     private void shootBullet() {
         float bulletX = shipManager.getShip().getX() + (shipManager.getShip().getSprite().getWidth() / 2) - (bulletSprite.getWidth() / 2);
-        float bulletY = shipManager.getShip().getY() + shipManager.getShip().getSprite().getHeight() / 2 - (bulletSprite.getWidth() / 2);
+        float bulletY = shipManager.getShip().getY() + (bulletSprite.getWidth() / 2);
         Bullet newBullet = new Bullet(bulletX, bulletY, shipManager.getShip().getSprite().getRotation(), shipManager.getShip().getSpeedX(), shipManager.getShip().getSpeedY(), bulletSprite);
         bullets.add(newBullet);
         soundManager.playShootingSound();

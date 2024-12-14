@@ -7,17 +7,22 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.asteroids.models.Asteroid;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AsteroidsManager {
 
-    private int maxAsteroids = 4;
+    private int maxAsteroids = 6;
     private Array<Asteroid> asteroids;
-    private final Sprite asteroidSprite;
+    private Map<Integer, Sprite> asteroidSprites;
     private SpriteBatch batch;
 
-    public AsteroidsManager(SpriteBatch batch, Sprite asteroidSprite) {
-        this.asteroidSprite = asteroidSprite;
+    public AsteroidsManager(SpriteBatch batch, Sprite largeAsteroidSprite, Sprite mediumAsteroidSprite) {
         this.batch = batch;
         this.asteroids = new Array<>();
+        this.asteroidSprites = new HashMap<>();
+        asteroidSprites.put(1, mediumAsteroidSprite);
+        asteroidSprites.put(2, largeAsteroidSprite);
     }
 
     public void update() {
@@ -70,11 +75,28 @@ public class AsteroidsManager {
                 asteroidRotation = MathUtils.random(120, 240);
                 break;
         }
-        Asteroid newAsteroid = new Asteroid(x, y, asteroidRotation, asteroidSprite, buffer);
+        Asteroid newAsteroid = new Asteroid(x, y, asteroidRotation, asteroidSprites.get(2), buffer, 2);
         asteroids.add(newAsteroid);
     }
 
     public void destroyAsteroid(Asteroid asteroid) {
+        if (asteroid.getSize() > 1) {
+            int newAsteroidSize = asteroid.getSize() - 1;
+            for (int i = 0; i < 2; i++) {
+                float newX = asteroid.getX() + MathUtils.random(-20, 20);
+                float newY = asteroid.getY() + MathUtils.random(-20, 20);
+                float newRotation = MathUtils.random(0, 360);
+
+                Asteroid smallerAsteroid = new Asteroid(
+                        newX,
+                        newY,
+                        newRotation,
+                        asteroidSprites.get(newAsteroidSize),
+                        newAsteroidSize
+                );
+                asteroids.add(smallerAsteroid);
+            }
+        }
         asteroids.removeValue(asteroid, true);
     }
 
@@ -92,7 +114,7 @@ public class AsteroidsManager {
                 continue;
             }
             batch.begin();
-            batch.draw(asteroidSprite, asteroid.getX(), asteroid.getY());
+            batch.draw(asteroid.getSprite(), asteroid.getX(), asteroid.getY());
             batch.end();
         }
     }

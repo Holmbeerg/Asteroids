@@ -10,6 +10,8 @@ public class ShipManager {
     private Ship ship;
     private SpriteBatch batch;
     private boolean isThrusting;
+    private float respawnDelay = 2.0f;
+    private float respawnTime = 0.0f;
 
 
     public ShipManager(SpriteBatch batch, Ship ship) {
@@ -20,11 +22,20 @@ public class ShipManager {
     }
 
     public void update() {
-        shipMovement();
-        drawShip();
-        ship.updateBoundingRectangle();
-        handleScreenWrap();
-        ship.getMovingShipSprite().setRotation(ship.getSprite().getRotation());
+        if (ship.isDead()) {
+            respawnTime += Gdx.graphics.getDeltaTime();
+            resetShip();
+            if (respawnTime >= respawnDelay) {
+                respawnTime = 0.0f;
+                ship.setDead(false);
+            }
+        } else {
+            shipMovement();
+            drawShip();
+            handleScreenWrap();
+            ship.updateBoundingRectangle();
+            ship.getMovingShipSprite().setRotation(ship.getSprite().getRotation());
+        }
     }
 
     private void handleScreenWrap() {
@@ -66,13 +77,13 @@ public class ShipManager {
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             batch.begin();
-            ship.updateSpriteRotation(rotationAmount);
+            ship.setSpriteRotation(rotationAmount);
             batch.end();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             batch.begin();
-            ship.updateSpriteRotation(-rotationAmount);
+            ship.setSpriteRotation(-rotationAmount);
             batch.end();
         }
 
@@ -97,5 +108,14 @@ public class ShipManager {
 
         ship.slowDown(Gdx.graphics.getDeltaTime());
         ship.applySpeed(Gdx.graphics.getDeltaTime());
+    }
+
+    public void resetShip() {
+        ship.setSpriteRotation(90);
+        ship.setSpeedX(0.0f);
+        ship.setSpeedY(0.0f);
+        ship.setX(400);
+        ship.setY(400);
+        ship.updateBoundingRectangle();
     }
 }

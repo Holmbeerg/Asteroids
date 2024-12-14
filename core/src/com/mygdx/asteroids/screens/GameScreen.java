@@ -18,13 +18,15 @@ public class GameScreen implements Screen {
     TextureRegion shipImg;
     TextureRegion movingShip;
     TextureRegion bulletImg;
-    TextureRegion asteroidImg;
+    TextureRegion largeAsteroidImg;
+    TextureRegion smallAsteroidImg;
 
     Ship ship;
     Sprite shipSprite;
     Sprite movingShipSprite;
     Sprite bulletSprite;
-    Sprite asteroidSprite;
+    Sprite largeAsteroidSprite;
+    Sprite mediumAsteroidSprite;
 
     private SoundManager soundManager;
     private AsteroidsManager asteroidsManager;
@@ -35,25 +37,30 @@ public class GameScreen implements Screen {
 
     public GameScreen(final Application game) {
         this.game = game;
-        img = new Texture("cuttings/asteroids.png");
-        shipImg = new TextureRegion(img, 96, 128, 48, 32);
-        movingShip = new TextureRegion(img, 144, 128, 48, 32);
-        bulletImg = new TextureRegion(img, 224, 144, 16, 16);
-        asteroidImg = new TextureRegion(img, 0, 0, 80, 80);
-
-        shipSprite = new Sprite(shipImg);
-        movingShipSprite = new Sprite(movingShip);
-        bulletSprite = new Sprite(bulletImg);
-        asteroidSprite = new Sprite(asteroidImg);
+        loadAssets();
         ship = new Ship(400, 400, shipSprite, movingShipSprite);
         player = new Player();
         soundManager = new SoundManager(player);
         shipManager = new ShipManager(game.batch, ship);
         bulletManager = new BulletManager(game.batch, soundManager, shipManager, bulletSprite);
-        asteroidsManager = new AsteroidsManager(game.batch, asteroidSprite);
-        collisionManager = new CollisionManager(asteroidsManager, bulletManager, player, shipManager);
+        asteroidsManager = new AsteroidsManager(game.batch, largeAsteroidSprite, mediumAsteroidSprite);
+        collisionManager = new CollisionManager(asteroidsManager, bulletManager, player, shipManager, soundManager);
     }
 
+    private void loadAssets() {
+        img = new Texture("cuttings/asteroids.png");
+        shipImg = new TextureRegion(img, 96, 128, 48, 32);
+        movingShip = new TextureRegion(img, 144, 128, 48, 32);
+        bulletImg = new TextureRegion(img, 224, 144, 16, 16);
+        largeAsteroidImg = new TextureRegion(img, 0, 0, 80, 80);
+        smallAsteroidImg = new TextureRegion(img, 0, 80, 48, 48);
+
+        shipSprite = new Sprite(shipImg);
+        movingShipSprite = new Sprite(movingShip);
+        bulletSprite = new Sprite(bulletImg);
+        largeAsteroidSprite = new Sprite(largeAsteroidImg);
+        mediumAsteroidSprite = new Sprite(smallAsteroidImg);
+    }
 
     @Override
     public void show() {

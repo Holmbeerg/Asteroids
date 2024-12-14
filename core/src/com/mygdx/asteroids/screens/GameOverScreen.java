@@ -28,12 +28,11 @@ public class GameOverScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("metalui/metal-ui.json")); // som css
         Gdx.input.setInputProcessor(stage);
 
-
         this.table = new Table(); // https://libgdx.com/wiki/graphics/2d/scene2d/table
         table.setFillParent(true);
         stage.addActor(table);
 
-        Label gameOverLabel = new Label("GAME OVER! FINAL SCORE: " + player.getScore(), skin, "white"); // om inget anges tas default från skin som i metal-ui.json är svart = syns inte på svart bakgrund
+        Label gameOverLabel = new Label("GAME OVER! FINAL SCORE: " + player.getScore(), skin, "white");
         gameOverLabel.setColor(Color.RED);
 
         table.add(gameOverLabel);

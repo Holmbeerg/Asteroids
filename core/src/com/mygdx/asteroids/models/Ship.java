@@ -9,6 +9,7 @@ public class Ship extends Entities {
     private final Sprite thrustingSprite;
     private final Rectangle boundingRectangle;
 
+
     public Ship(int xPos, int yPos, Sprite shipSprite, Sprite thrustingSprite) {
         super(xPos, yPos, shipSprite);
         this.thrustingSprite = thrustingSprite;
@@ -36,7 +37,7 @@ public class Ship extends Entities {
         super.setSprite(normalSprite);
     }
 
-    public void updateSpriteRotation(float rotation) {
+    public void setSpriteRotation(float rotation) {
         this.normalSprite.rotate(rotation);
         this.thrustingSprite.rotate(rotation);
     }

@@ -10,6 +10,7 @@ public class SoundManager {
     private final Sound thrusterSound;
     private final Sound mainSound;
     private final Sound shootingSound;
+    private final Sound asteroidSound;
     private long thrusterSoundId = -1;
     private float mainSoundTimer = 0f;
 
@@ -21,11 +22,16 @@ public class SoundManager {
         this.mainSound = Gdx.audio.newSound(Gdx.files.internal("audio/beat1.ogg"));
         this.shootingSound = Gdx.audio.newSound(Gdx.files.internal("audio/fire.mp3"));
         this.thrusterSound = Gdx.audio.newSound(Gdx.files.internal("audio/thrust.ogg"));
+        this.asteroidSound = Gdx.audio.newSound(Gdx.files.internal("audio/bangLarge.ogg"));
         this.player = player;
     }
 
     public void playShootingSound() {
         shootingSound.play(0.5f);
+    }
+
+    public void playAsteroidSound() {
+        asteroidSound.play(0.5f);
     }
 
     public void update() {

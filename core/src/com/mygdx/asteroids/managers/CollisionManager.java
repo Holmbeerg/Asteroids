@@ -9,16 +9,18 @@ public class CollisionManager {
     private BulletManager bulletManager;
     private Player player;
     private ShipManager shipManager;
+    private SoundManager soundManager;
 
-    public CollisionManager(AsteroidsManager asteroidManager, BulletManager bulletManager, Player player, ShipManager shipManager) {
+    public CollisionManager(AsteroidsManager asteroidManager, BulletManager bulletManager, Player player, ShipManager shipManager, SoundManager soundManager) {
         this.asteroidManager = asteroidManager;
         this.bulletManager = bulletManager;
         this.player = player;
         this.shipManager = shipManager;
+        this.soundManager = soundManager;
     }
 
     public void update() {
-        if (!player.isDead()) {
+        if (!player.isDead() && !shipManager.getShip().isDead()) {
             collisionHandler();
         }
     }
@@ -39,7 +41,8 @@ public class CollisionManager {
             if (asteroidRect.contains(bulletRect)) {
                 asteroidManager.destroyAsteroid(asteroid);
                 bulletManager.removeBullet(bullet);
-                player.addScore(20); // #TODO different sizes of asteroids exist, give different score depending on size of asteroid
+                player.addScore(asteroid.getValue());
+                soundManager.playAsteroidSound();
             }
         }
     }
@@ -48,8 +51,10 @@ public class CollisionManager {
         Rectangle asteroidRect = asteroid.getBoundingRectangle();
 
         if (asteroidRect.contains(shipManager.getShip().getBoundingRectangle())) {
+            shipManager.getShip().setDead(true);
             asteroidManager.destroyAsteroid(asteroid);
             player.removeLife();
+            soundManager.playAsteroidSound();
         }
     }
 }
